@@ -8,6 +8,7 @@
       <div class="page-actions">
         <button class="btn primary" type="button" @click="openCreate">登记分发通道</button>
         <button class="btn" type="button" @click="exportRows">导出数据分发清单</button>
+        <RouterLink class="btn" to="/distbatch">分发批次清单</RouterLink>
       </div>
     </header>
 
@@ -55,6 +56,7 @@
             >
               {{ action }}
             </button>
+            <button class="link" type="button" @click="startDistribute(row)">发起分发</button>
           </td>
         </tr>
         <tr v-if="!rows.length">
@@ -65,6 +67,7 @@
 
     <footer class="page-foot">
       <span>共 {{ total }} 条数据分发记录</span>
+      <span v-if="noticeMessage" class="notice-text">{{ noticeMessage }}</span>
       <span v-if="errorMessage" class="error-text">{{ errorMessage }}</span>
     </footer>
   </section>
@@ -78,6 +81,7 @@ import {
   listEntries,
   moduleMeta,
   runAction as applyAction,
+  startDistributionForChannel,
 } from '@/api/local-service'
 import type { EntryRow } from '@/data/types'
 
@@ -90,6 +94,7 @@ const stats = [{"label": "分发通道总数", "value": 0}, {"label": "已启用
 const rows = ref<EntryRow[]>([])
 const total = ref(0)
 const errorMessage = ref('')
+const noticeMessage = ref('')
 const filters = ref<Record<string, string>>({})
 const filterFields = columns.slice(0, 3)
 const statusSummary = computed(() =>
@@ -114,12 +119,24 @@ function openCreate() {
 
 function runAction(action: string, row: EntryRow) {
   errorMessage.value = ''
+  noticeMessage.value = ''
   const result = applyAction(meta.key, Number(row.id), action)
   if (!result.ok) {
     errorMessage.value = result.message
     return
   }
   reload()
+}
+
+function startDistribute(row: EntryRow) {
+  errorMessage.value = ''
+  noticeMessage.value = ''
+  const result = startDistributionForChannel(Number(row.id))
+  if (!result.ok) {
+    errorMessage.value = result.message
+    return
+  }
+  noticeMessage.value = result.message
 }
 
 function reload() {

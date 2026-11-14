@@ -17,6 +17,7 @@ const Monitor = () => import('@/views/monitor/index.vue')
 const Cleanse = () => import('@/views/cleanse/index.vue')
 const Delta = () => import('@/views/delta/index.vue')
 const Export = () => import('@/views/export/index.vue')
+const Distbatch = () => import('@/views/distbatch/index.vue')
 const Rpaflow = () => import('@/views/rpaflow/index.vue')
 const Auth = () => import('@/views/auth/index.vue')
 
@@ -40,6 +41,7 @@ const router = createRouter({
     { path: '/cleanse', name: 'cleanse', component: Cleanse },
     { path: '/delta', name: 'delta', component: Delta },
     { path: '/export', name: 'export', component: Export },
+    { path: '/distbatch', name: 'distbatch', component: Distbatch },
     { path: '/rpaflow', name: 'rpaflow', component: Rpaflow },
     { path: '/auth', name: 'auth', component: Auth },
   ],
